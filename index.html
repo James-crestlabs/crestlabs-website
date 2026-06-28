@@ -514,12 +514,36 @@
     }
 
     // Contact form
-    function handleContact() {
+    async function handleContact() {
       const name = document.getElementById('contact-name').value;
       const email = document.getElementById('contact-email').value;
       const msg = document.getElementById('contact-message').value;
       if (!name || !email || !msg) return;
-      document.getElementById('contact-msg').classList.remove('hidden');
+
+      const btn = document.querySelector('[onclick="handleContact()"]');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('https://formspree.io/f/xwvdbqdw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ name, email, message: msg })
+        });
+        if (res.ok) {
+          document.getElementById('contact-name').value = '';
+          document.getElementById('contact-email').value = '';
+          document.getElementById('contact-message').value = '';
+          document.getElementById('contact-msg').classList.remove('hidden');
+          btn.textContent = 'Sent ✓';
+        } else {
+          btn.textContent = 'Failed — try emailing us directly';
+          btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = 'Failed — try emailing us directly';
+        btn.disabled = false;
+      }
     }
   </script>
 
