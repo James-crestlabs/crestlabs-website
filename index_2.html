@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrestLabs — Software Built for Operators</title>
+  <meta name="description" content="CrestLabs builds custom software, automation, and fintech tools for Australian investors and business operators." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              950: '#070D1A',
+              900: '#0B1120',
+              800: '#111B2E',
+              700: '#1A2940',
+              600: '#243650',
+            },
+            gold: {
+              400: '#FCD34D',
+              500: '#F59E0B',
+              600: '#D97706',
+            },
+            slate: {
+              400: '#94A3B8',
+              300: '#CBD5E1',
+              200: '#E2E8F0',
+            }
+          },
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background-color: #0B1120; color: #F8FAFC; }
+
+    /* Nav */
+    .nav-link { position: relative; }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #F59E0B; transition: width 0.25s ease; }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Terminal cursor blink */
+    .cursor { display: inline-block; width: 3px; height: 1.1em; background: #F59E0B; margin-left: 2px; vertical-align: middle; animation: blink 1s step-end infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* Gradient line */
+    .gold-line { height: 1px; background: linear-gradient(to right, transparent, #F59E0B, transparent); }
+
+    /* Card hover */
+    .work-card { transition: transform 0.2s ease, border-color 0.2s ease; }
+    .work-card:hover { transform: translateY(-4px); border-color: #F59E0B; }
+
+    /* Capability card */
+    .cap-card { transition: background 0.2s ease, border-color 0.2s ease; }
+    .cap-card:hover { background: #1A2940; border-color: #243650; }
+
+    /* Glow */
+    .gold-glow { text-shadow: 0 0 40px rgba(245, 158, 11, 0.3); }
+
+    /* Section fade-in */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* Form input */
+    .form-input { background: #111B2E; border: 1px solid #1A2940; color: #F8FAFC; transition: border-color 0.2s; }
+    .form-input:focus { outline: none; border-color: #F59E0B; }
+    .form-input::placeholder { color: #475569; }
+
+    /* Noise overlay for depth */
+    .noise { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { opacity: 1; transform: none; }
+      .cursor { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────────────────── -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-navy-700" style="background: rgba(11,17,32,0.92); backdrop-filter: blur(12px);">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-display font-700 text-lg tracking-tight flex items-center gap-2">
+        <span class="text-gold-500">▲</span>
+        <span class="font-bold" style="font-family: 'Space Grotesk', sans-serif;">CrestLabs</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm text-slate-400 font-body">
+        <a href="#work" class="nav-link hover:text-white transition-colors">Our Work</a>
+        <a href="#capabilities" class="nav-link hover:text-white transition-colors">What We Build</a>
+        <a href="#products" class="nav-link hover:text-white transition-colors">Products</a>
+        <a href="#about" class="nav-link hover:text-white transition-colors">About</a>
+        <a href="#contact" class="bg-gold-500 hover:bg-gold-400 text-navy-900 font-semibold px-4 py-2 rounded text-sm transition-colors" style="font-family: 'Space Grotesk', sans-serif;">Hire Us</a>
+      </div>
+      <!-- Mobile menu button -->
+      <button id="mobile-menu-btn" class="md:hidden text-slate-400 hover:text-white" aria-label="Menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-navy-700 px-6 py-4 flex flex-col gap-4 text-sm text-slate-400">
+      <a href="#work" class="hover:text-white transition-colors">Our Work</a>
+      <a href="#capabilities" class="hover:text-white transition-colors">What We Build</a>
+      <a href="#products" class="hover:text-white transition-colors">Products</a>
+      <a href="#about" class="hover:text-white transition-colors">About</a>
+      <a href="#contact" class="text-gold-500 font-semibold">Hire Us →</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────────────────── -->
+  <section class="min-h-screen flex flex-col justify-center relative overflow-hidden pt-16">
+    <!-- Background grid -->
+    <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(#94A3B8 1px, transparent 1px), linear-gradient(90deg, #94A3B8 1px, transparent 1px); background-size: 48px 48px;"></div>
+    <!-- Radial glow -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10" style="background: radial-gradient(circle, #F59E0B 0%, transparent 70%);"></div>
+
+    <div class="relative max-w-6xl mx-auto px-6 py-20">
+      <!-- Eyebrow -->
+      <div class="flex items-center gap-3 mb-8">
+        <span class="font-mono text-gold-500 text-xs tracking-widest uppercase">Brisbane, AU</span>
+        <span class="w-8 h-px bg-gold-500 opacity-60"></span>
+        <span class="font-mono text-slate-400 text-xs tracking-widest uppercase">est. 2026</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="font-display font-bold text-5xl md:text-7xl leading-tight mb-6 tracking-tight" style="font-family: 'Space Grotesk', sans-serif;">
+        We build the tools<br />
+        <span class="text-gold-500 gold-glow">we couldn't find.</span>
+      </h1>
+
+      <!-- Terminal typing line -->
+      <div class="flex items-center gap-3 mb-10">
+        <span class="font-mono text-slate-400 text-sm md:text-base">$ currently building</span>
+        <span class="font-mono text-white text-sm md:text-base font-medium" id="typed-text"></span>
+        <span class="cursor"></span>
+      </div>
+
+      <p class="text-slate-300 text-lg md:text-xl max-w-2xl leading-relaxed mb-10">
+        CrestLabs designs and builds custom software, automation, and fintech tools for Australian investors and business operators — purpose-built for the problems no off-the-shelf product solves.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="#contact" class="inline-flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-400 text-navy-900 font-semibold px-6 py-3 rounded transition-colors" style="font-family: 'Space Grotesk', sans-serif;">
+          Work With Us
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#work" class="inline-flex items-center justify-center gap-2 border border-navy-600 hover:border-slate-400 text-slate-300 hover:text-white font-medium px-6 py-3 rounded transition-colors" style="font-family: 'Space Grotesk', sans-serif;">
+          See Our Work
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-600">
+      <span class="text-xs font-mono tracking-widest uppercase">scroll</span>
+      <div class="w-px h-8 bg-gradient-to-b from-slate-600 to-transparent"></div>
+    </div>
+  </section>
+
+  <!-- ── CAPABILITIES ───────────────────────────────────────────── -->
+  <section id="capabilities" class="py-24 border-t border-navy-700">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="fade-up mb-16">
+        <p class="font-mono text-gold-500 text-xs tracking-widest uppercase mb-4">What We Build</p>
+        <h2 class="font-display font-bold text-3xl md:text-4xl" style="font-family: 'Space Grotesk', sans-serif;">
+          Four areas. One studio.
+        </h2>
+        <p class="text-slate-400 mt-4 max-w-xl">Every engagement is different. These are the domains where we have deep working knowledge and proven output.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div class="cap-card border border-navy-700 rounded-xl p-7 fade-up">
+          <div class="w-10 h-10 rounded-lg bg-navy-700 flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-lg mb-2" style="font-family: 'Space Grotesk', sans-serif;">Fintech & Trading Tools</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Automated trading bots, options strategy dashboards, portfolio analytics, and income-generating systems for active investors. Built on real strategies that run real money.</p>
+        </div>
+
+        <div class="cap-card border border-navy-700 rounded-xl p-7 fade-up">
+          <div class="w-10 h-10 rounded-lg bg-navy-700 flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-lg mb-2" style="font-family: 'Space Grotesk', sans-serif;">Business Operations</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Custom internal tools, staff compliance systems, reporting dashboards, and workflow automation for business owners who need software built around how they actually operate.</p>
+        </div>
+
+        <div class="cap-card border border-navy-700 rounded-xl p-7 fade-up">
+          <div class="w-10 h-10 rounded-lg bg-navy-700 flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-lg mb-2" style="font-family: 'Space Grotesk', sans-serif;">Data & Automation</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">OCR pipelines, document processing, scheduled automations, and data integrations that eliminate manual work. If you're doing it by hand every week, we can automate it.</p>
+        </div>
+
+        <div class="cap-card border border-navy-700 rounded-xl p-7 fade-up">
+          <div class="w-10 h-10 rounded-lg bg-navy-700 flex items-center justify-center mb-5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-lg mb-2" style="font-family: 'Space Grotesk', sans-serif;">Portfolio & Wealth UI</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Custom portfolio interfaces, investment tracking dashboards, and wealth visualisation tools — built for investors who've outgrown generic apps and want something that reflects how they think.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OUR WORK ──────────────────────────────────────────────── -->
+  <section id="work" class="py-24 border-t border-navy-700">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="fade-up mb-16">
+        <p class="font-mono text-gold-500 text-xs tracking-widest uppercase mb-4">Our Work</p>
+        <h2 class="font-display font-bold text-3xl md:text-4xl" style="font-family: 'Space Grotesk', sans-serif;">
+          Shipped. Running. Generating value.
+        </h2>
+        <p class="text-slate-400 mt-4 max-w-xl">Everything below is real software in active use — not demos, not concepts.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Card 1 -->
+        <div class="work-card border border-navy-700 rounded-xl overflow-hidden fade-up">
+          <div class="h-2 bg-gradient-to-r from-gold-600 to-gold-400"></div>
+          <div class="p-7">
+            <div class="flex items-start justify-between mb-4">
+              <span class="font-mono text-xs text-gold-500 uppercase tracking-widest">Fintech</span>
+              <span class="text-xs text-slate-600 font-mono">Active</span>
+            </div>
+            <h3 class="font-display font-semibold text-xl mb-3" style="font-family: 'Space Grotesk', sans-serif;">Automated Wheel Strategy Bot</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5">A fully automated options wheel strategy bot with a real-time UI dashboard. Runs an income-generating trading cycle — cash-secured puts into covered calls — with live P&L tracking, position management, and alerting. Currently generating consistent monthly income.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">Options Trading</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">Python</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">React Dashboard</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="work-card border border-navy-700 rounded-xl overflow-hidden fade-up">
+          <div class="h-2 bg-gradient-to-r from-navy-600 to-slate-400" style="background: linear-gradient(to right, #243650, #64748B);"></div>
+          <div class="p-7">
+            <div class="flex items-start justify-between mb-4">
+              <span class="font-mono text-xs text-slate-400 uppercase tracking-widest">Business Ops</span>
+              <span class="text-xs text-slate-600 font-mono">Active</span>
+            </div>
+            <h3 class="font-display font-semibold text-xl mb-3" style="font-family: 'Space Grotesk', sans-serif;">Staff Compliance Tracker</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5">A full-stack compliance system for franchise operators — tracks staff serving accuracy against weight targets via OCR-processed receipt scanning. Includes staff logins, per-employee performance records, and trend reporting. Replacing a fully manual process.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">AWS Textract OCR</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">SQLite DB</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">Auth System</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="work-card border border-navy-700 rounded-xl overflow-hidden fade-up">
+          <div class="h-2 bg-gradient-to-r from-navy-600 to-slate-400" style="background: linear-gradient(to right, #243650, #64748B);"></div>
+          <div class="p-7">
+            <div class="flex items-start justify-between mb-4">
+              <span class="font-mono text-xs text-slate-400 uppercase tracking-widest">Automation</span>
+              <span class="text-xs text-slate-600 font-mono">Active</span>
+            </div>
+            <h3 class="font-display font-semibold text-xl mb-3" style="font-family: 'Space Grotesk', sans-serif;">ShareSight ROC Automation</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5">Eliminates the manual work of processing Return of Capital distributions in ShareSight — a time-consuming annual task for investors holding income-focused ETFs. Automates detection, calculation, and entry. Saves hours of manual reconciliation per tax year.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">ShareSight API</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">Python</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">AU Tax</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="work-card border border-navy-700 rounded-xl overflow-hidden fade-up">
+          <div class="h-2 bg-gradient-to-r from-gold-600 to-gold-400"></div>
+          <div class="p-7">
+            <div class="flex items-start justify-between mb-4">
+              <span class="font-mono text-xs text-gold-500 uppercase tracking-widest">Fintech</span>
+              <span class="text-xs text-slate-600 font-mono">Active</span>
+            </div>
+            <h3 class="font-display font-semibold text-xl mb-3" style="font-family: 'Space Grotesk', sans-serif;">Apex Terminal — Portfolio UI</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-5">A custom portfolio management interface built for a multi-stream investment portfolio — ETFs, options, dividends, and cash. Real-time position views, income modelling, scenario analysis, and CSV-based transaction import. Built because nothing on the market handled the complexity.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">React</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">Financial Modelling</span>
+              <span class="text-xs bg-navy-700 text-slate-400 px-3 py-1 rounded-full">IBKR / Moomoo</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRODUCTS ──────────────────────────────────────────────── -->
+  <section id="products" class="py-24 border-t border-navy-700">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="fade-up mb-16">
+        <p class="font-mono text-gold-500 text-xs tracking-widest uppercase mb-4">Products</p>
+        <h2 class="font-display font-bold text-3xl md:text-4xl" style="font-family: 'Space Grotesk', sans-serif;">
+          Tools you can buy, not just commission.
+        </h2>
+        <p class="text-slate-400 mt-4 max-w-xl">The best of what we've built is becoming available as standalone products for Australian investors.</p>
+      </div>
+
+      <!-- ShareSight product card -->
+      <div class="border border-navy-700 rounded-xl p-8 md:p-10 fade-up relative overflow-hidden">
+        <!-- Coming soon badge -->
+        <div class="absolute top-6 right-6">
+          <span class="font-mono text-xs bg-gold-500 text-navy-900 font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Coming Soon</span>
+        </div>
+        <!-- Subtle glow -->
+        <div class="absolute bottom-0 right-0 w-64 h-64 opacity-5 rounded-full" style="background: radial-gradient(circle, #F59E0B 0%, transparent 70%);"></div>
+
+        <div class="relative">
+          <div class="w-12 h-12 rounded-xl bg-navy-700 border border-navy-600 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+
+          <h3 class="font-display font-bold text-2xl md:text-3xl mb-3" style="font-family: 'Space Grotesk', sans-serif;">ShareSight ROC Automation</h3>
+          <p class="text-slate-400 text-base leading-relaxed max-w-2xl mb-4">
+            If you hold income-focused ETFs in ShareSight — QQQI, SPYI, MLPI, VTS, FEPI and others — you know the pain of manually processing Return of Capital adjustments each financial year. It's tedious, error-prone, and takes hours.
+          </p>
+          <p class="text-slate-300 text-base leading-relaxed max-w-2xl mb-8">
+            We're turning our internal automation into a proper SaaS product. Connect your ShareSight account, run the tool, done. Launching later in 2026 for AU investors.
+          </p>
+
+          <!-- Email capture -->
+          <div class="max-w-md">
+            <p class="text-sm text-slate-400 mb-3">Get notified when it launches — no spam, just one email.</p>
+            <div class="flex gap-3">
+              <input type="email" id="notify-email" placeholder="your@email.com" class="form-input flex-1 rounded px-4 py-3 text-sm" />
+              <button onclick="handleNotify()" class="bg-gold-500 hover:bg-gold-400 text-navy-900 font-semibold px-5 py-3 rounded text-sm transition-colors whitespace-nowrap" style="font-family: 'Space Grotesk', sans-serif;">
+                Notify Me
+              </button>
+            </div>
+            <p id="notify-msg" class="text-xs text-gold-500 mt-2 hidden">✓ You're on the list. We'll be in touch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ─────────────────────────────────────────────────── -->
+  <section id="about" class="py-24 border-t border-navy-700">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div class="fade-up">
+          <p class="font-mono text-gold-500 text-xs tracking-widest uppercase mb-4">About</p>
+          <h2 class="font-display font-bold text-3xl md:text-4xl mb-6" style="font-family: 'Space Grotesk', sans-serif;">
+            Built by an operator,<br />for operators.
+          </h2>
+          <p class="text-slate-300 leading-relaxed mb-5">
+            CrestLabs started the way most useful software does — out of necessity. As a Brisbane-based business owner and active investor managing multiple income streams, we kept running into the same problem: the tools we needed didn't exist, and the ones that did weren't built for how we actually worked.
+          </p>
+          <p class="text-slate-400 leading-relaxed mb-5">
+            So we built them ourselves. Trading bots that generate real income. Compliance systems that replaced manual processes. Portfolio dashboards that reflect genuine complexity. Automations that gave back hours every week.
+          </p>
+          <p class="text-slate-400 leading-relaxed">
+            CrestLabs is now the studio behind those tools — and the place where other operators and investors can get the same kind of work done for their own problems.
+          </p>
+        </div>
+
+        <div class="fade-up">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="border border-navy-700 rounded-xl p-6 text-center">
+              <div class="font-display font-bold text-3xl text-gold-500 mb-1" style="font-family: 'Space Grotesk', sans-serif;">10+</div>
+              <div class="text-slate-400 text-sm">Years in business</div>
+            </div>
+            <div class="border border-navy-700 rounded-xl p-6 text-center">
+              <div class="font-display font-bold text-3xl text-gold-500 mb-1" style="font-family: 'Space Grotesk', sans-serif;">4</div>
+              <div class="text-slate-400 text-sm">Tools in production</div>
+            </div>
+            <div class="border border-navy-700 rounded-xl p-6 text-center">
+              <div class="font-display font-bold text-3xl text-gold-500 mb-1" style="font-family: 'Space Grotesk', sans-serif;">AU</div>
+              <div class="text-slate-400 text-sm">Based in Brisbane, QLD</div>
+            </div>
+            <div class="border border-navy-700 rounded-xl p-6 text-center">
+              <div class="font-display font-bold text-3xl text-gold-500 mb-1" style="font-family: 'Space Grotesk', sans-serif;">$0</div>
+              <div class="text-slate-400 text-sm">VC funding. Bootstrapped.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ───────────────────────────────────────────────── -->
+  <section id="contact" class="py-24 border-t border-navy-700">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="max-w-2xl fade-up">
+        <p class="font-mono text-gold-500 text-xs tracking-widest uppercase mb-4">Hire Us</p>
+        <h2 class="font-display font-bold text-3xl md:text-4xl mb-4" style="font-family: 'Space Grotesk', sans-serif;">
+          Have a problem that needs solving?
+        </h2>
+        <p class="text-slate-400 leading-relaxed mb-10">
+          We work with a small number of clients at a time — business owners, investors, and operators who have a specific problem and need it built properly. Tell us what you're dealing with.
+        </p>
+
+        <div class="flex flex-col gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-slate-400 mb-2 font-mono uppercase tracking-wider">Your Name</label>
+              <input type="text" id="contact-name" placeholder="James" class="form-input w-full rounded px-4 py-3 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-2 font-mono uppercase tracking-wider">Email</label>
+              <input type="email" id="contact-email" placeholder="you@example.com" class="form-input w-full rounded px-4 py-3 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-2 font-mono uppercase tracking-wider">What do you need built?</label>
+            <textarea id="contact-message" rows="5" placeholder="Describe the problem, not the solution. We'll figure out what to build together." class="form-input w-full rounded px-4 py-3 text-sm resize-none"></textarea>
+          </div>
+          <div>
+            <button onclick="handleContact()" class="bg-gold-500 hover:bg-gold-400 text-navy-900 font-semibold px-8 py-3 rounded transition-colors" style="font-family: 'Space Grotesk', sans-serif;">
+              Send Enquiry →
+            </button>
+            <p id="contact-msg" class="text-xs text-gold-500 mt-3 hidden">✓ Message received. We'll be in touch within 1–2 business days.</p>
+          </div>
+        </div>
+
+        <div class="mt-10 pt-8 border-t border-navy-700">
+          <p class="text-slate-500 text-sm">Or reach us directly at <a href="mailto:contact@crestlabs.com.au" class="text-gold-500 hover:text-gold-400 transition-colors">contact@crestlabs.com.au</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────────────────── -->
+  <footer class="border-t border-navy-700 py-10">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-gold-500">▲</span>
+        <span class="font-display font-bold text-sm" style="font-family: 'Space Grotesk', sans-serif;">CrestLabs</span>
+        <span class="text-slate-600 text-sm ml-2">Brisbane, AU</span>
+      </div>
+      <p class="text-slate-600 text-xs font-mono">© 2026 CrestLabs. ABN registered.</p>
+      <div class="flex gap-6 text-xs text-slate-500">
+        <a href="#work" class="hover:text-white transition-colors">Work</a>
+        <a href="#products" class="hover:text-white transition-colors">Products</a>
+        <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── SCRIPTS ───────────────────────────────────────────────── -->
+  <script>
+    // Mobile menu
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
+
+    // Typing animation
+    const phrases = [
+      'trading bots that generate income',
+      'portfolio dashboards you\'ll actually use',
+      'business automation that saves hours',
+      'fintech tools built for AU investors',
+      'compliance systems for franchise operators',
+    ];
+    let phraseIndex = 0, charIndex = 0, deleting = false;
+    const typedEl = document.getElementById('typed-text');
+
+    function type() {
+      const current = phrases[phraseIndex];
+      if (!deleting) {
+        typedEl.textContent = current.slice(0, charIndex + 1);
+        charIndex++;
+        if (charIndex === current.length) {
+          deleting = true;
+          setTimeout(type, 2000);
+          return;
+        }
+      } else {
+        typedEl.textContent = current.slice(0, charIndex - 1);
+        charIndex--;
+        if (charIndex === 0) {
+          deleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+        }
+      }
+      setTimeout(type, deleting ? 35 : 60);
+    }
+    setTimeout(type, 800);
+
+    // Fade-up on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Notify form
+    function handleNotify() {
+      const email = document.getElementById('notify-email').value;
+      if (!email || !email.includes('@')) return;
+      document.getElementById('notify-email').value = '';
+      document.getElementById('notify-msg').classList.remove('hidden');
+    }
+
+    // Contact form
+    function handleContact() {
+      const name = document.getElementById('contact-name').value;
+      const email = document.getElementById('contact-email').value;
+      const msg = document.getElementById('contact-message').value;
+      if (!name || !email || !msg) return;
+      document.getElementById('contact-msg').classList.remove('hidden');
+    }
+  </script>
+
+</body>
+</html>
