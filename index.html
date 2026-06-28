@@ -6,14 +6,30 @@
   <title>CrestLabs — Software Built for Operators</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='52' height='44' viewBox='0 0 52 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='28' width='8' height='16' rx='2' fill='%23F59E0B' opacity='0.5'/%3E%3Crect x='11' y='16' width='8' height='28' rx='2' fill='%23F59E0B' opacity='0.75'/%3E%3Crect x='22' y='0' width='8' height='44' rx='2' fill='%23F59E0B'/%3E%3Crect x='33' y='16' width='8' height='28' rx='2' fill='%23F59E0B' opacity='0.75'/%3E%3Crect x='44' y='28' width='8' height='16' rx='2' fill='%23F59E0B' opacity='0.5'/%3E%3C/svg%3E">
   <meta name="description" content="CrestLabs builds custom software, automation, and fintech tools for Australian investors and business operators." />
-  <!-- Fonts async: no render-blocking -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"
-    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" /></noscript>
-  <!-- Tailwind pre-built CSS (not render-blocking JS) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.17/dist/tailwind.min.css" />
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 950: '#070D1A', 900: '#0B1120', 800: '#111B2E', 700: '#1A2940', 600: '#243650' },
+            gold: { 400: '#FCD34D', 500: '#F59E0B', 600: '#D97706' },
+            slate: { 400: '#94A3B8', 300: '#CBD5E1', 200: '#E2E8F0' }
+          },
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
   <style>
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
