@@ -511,12 +511,39 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // Notify form
-    function handleNotify() {
+    // Notify form — submits to Formspree
+    async function handleNotify() {
       const email = document.getElementById('notify-email').value;
       if (!email || !email.includes('@')) return;
-      document.getElementById('notify-email').value = '';
-      document.getElementById('notify-msg').classList.remove('hidden');
+
+      const notifyBtn = document.querySelector('[onclick="handleNotify()"]');
+      notifyBtn.textContent = 'Sending...';
+      notifyBtn.disabled = true;
+
+      try {
+        const res = await fetch('https://formspree.io/f/xwvdbqdw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            email,
+            _subject: 'ShareSight ROC — Waitlist Signup',
+            type: 'waitlist',
+            message: 'New waitlist signup for ShareSight ROC Automation'
+          })
+        });
+        if (res.ok) {
+          document.getElementById('notify-email').value = '';
+          document.getElementById('notify-msg').classList.remove('hidden');
+          notifyBtn.textContent = 'Notify Me';
+          notifyBtn.disabled = false;
+        } else {
+          notifyBtn.textContent = 'Try again';
+          notifyBtn.disabled = false;
+        }
+      } catch {
+        notifyBtn.textContent = 'Try again';
+        notifyBtn.disabled = false;
+      }
     }
 
     // Contact form
