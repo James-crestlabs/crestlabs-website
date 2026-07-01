@@ -779,6 +779,15 @@
         systems: document.getElementById('intake-systems').value.trim(),
       };
 
+      // Log to Google Sheet (system of record — Formspree free tier only keeps 30 days).
+      // Fire-and-forget: never let a logging failure block the actual submission.
+      try {
+        fetch('https://script.google.com/macros/s/AKfycbzFUc0_2vw-z5VoV24svIJXwgYuN9U2E_99MP9EnSChxeE3c4Wf9JLDi0sISX-ub3Ps/exec', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        }).catch(() => {});
+      } catch {}
+
       try {
         const res = await fetch('https://formspree.io/f/xwvdbqdw', {
           method: 'POST',
